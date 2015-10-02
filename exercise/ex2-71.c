@@ -32,15 +32,16 @@
  */
 
 /*
- * B. 要实现这个函数，我们利用了在算数右移的机器上，无符号是零扩展的，而有符号数
- *    是符号扩展的这个特性。
+ * B. 要实现这个函数，我们利用了在算数右移的机器上，无符号是零扩展的，而有符号可能是算数或者逻辑位移。
  */
 
 typedef unsigned packed_t;
 
 int xbyte(packed_t word, int bytenum)
 {
-        int shift_left = (3 - bytenum) << 3;
-
-        return (word << shift_left) >> 24;
+    int init = (word >> (bytenum << 3)) & 0xFF;
+    if(0x00000080 & word){
+        return init | 0xFFFFFF00;
+    }
+    return init;
 }
